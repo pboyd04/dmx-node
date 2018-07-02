@@ -1,0 +1,26 @@
+{
+  "name": "dmx-node",
+  "version": "0.0.1",
+  "description": "DMX Control for Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pboyd04/dmx-node.git"
+  },
+  "keywords": [
+    "DMX",
+    "light"
+  ],
+  "author": "Patrick Boyd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pboyd04/dmx-node/issues"
+  },
+  "homepage": "https://github.com/pboyd04/dmx-node#readme",
+  "dependencies": {
+    "serialport": "^6.2.1"
+  }
+}
