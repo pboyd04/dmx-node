@@ -2,4 +2,4 @@
 
 const DMXUniverse = require('./DMXUniverse').DMXUniverse;
 
-let universe = new DMXUniverse();
+modules.export.DMX = DMXUniverse;

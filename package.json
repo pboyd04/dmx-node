@@ -4,7 +4,9 @@
   "description": "DMX Control for Node",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "blackout": "node examples/blackout.js",
+    "allOn": "node examples/allOn.js",
+    "slowFade": "node examples/slowFade.js"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,8 @@
 
 const Serial = require('serialport');
 
+const HeaderSize = 5;
+
 class UltraDMXMicroDriver {
   constructor(options) {
     if(typeof options === 'string' || options instanceof String) {
@@ -13,35 +15,33 @@ class UltraDMXMicroDriver {
     this.serial = new Serial(this.options.portName, {
       'baudRate': 250000
     });
-    this.buffer = Buffer.alloc(512, 255);
+    this.buffer = Buffer.alloc(HeaderSize+512+1, 0);
+    this.buffer[0] = 0x7E; //Start message
+    this.buffer[1] = 0x06; //DMX data
+    this.buffer[2] = 0x01; //Size LSB (513 bytes)
+    this.buffer[3] = 0x02;
+    this.buffer[4] = 0x00;
+    this.buffer[HeaderSize+512] = 0xE7; //End of message
   }
 
   update() {
-    let header = Buffer.from([
-      0x7E,
-      0x06,
-      0x01,
-      0x02,
-      0x00
-    ]);
-    let packet = Buffer.concat([
-      header,
-      this.buffer,
-      Buffer.from([0xE7])
-    ]);
-    this.serial.write(packet);
+    this.serial.write(this.buffer);
   }
 
   getChannel(channel) {
-    return this.buffer[channel];
+    return this.buffer[HeaderSize+(channel-1)];
   }
 
   getAllChannels() {
-    return Array.prototype.slice.call(this.buffer, 0);
+    let ret = [];
+    for(let i = 1; i < 513; i++) {
+      ret.push(this.getChannel(i));
+    }
+    return ret;
   }
 
   setChannel(channel, value, drawNow) {
-    this.buffer[channel] = value;
+    this.buffer[HeaderSize+(channel-1)] = value;
     if(drawNow === true || drawNow === undefined) {
       this.update();
     }
@@ -53,7 +53,7 @@ class UltraDMXMicroDriver {
       max = value.length;
     }
     for(let i = 0; i < max; i++) {
-      this.buffer[i] = values[i];
+      this.buffer[HeaderSize+i] = values[i];
     }
     this.update();
   }
